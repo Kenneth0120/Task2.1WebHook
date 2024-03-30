@@ -1,0 +1,29 @@
+#include <WiFiNINA.h>
+#include <DHT11.h>
+#include <ThingSpeak.h>
+
+DHT11 dht11(2);
+
+WiFiClient client;
+
+char ssid[] = "Kogan_6D16_2.4G";
+char pass[] = "HsxKkzTnezTnC393";
+
+unsigned long myChannelNumber = 2490662;
+const char * myWriteAPIKey = "BFN9J66HLB8HMUDL";
+
+void setup() {
+    WiFi.begin(ssid,pass);
+    ThingSpeak.begin(client);
+    
+}
+
+void loop() {
+    float temperature = dht11.readTemperature();
+    float humidity = dht11.readHumidity();
+    ThingSpeak.setField(1,temperature);
+    ThingSpeak.setField(2,humidity);
+    ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
+
+    delay(20000);
+}
